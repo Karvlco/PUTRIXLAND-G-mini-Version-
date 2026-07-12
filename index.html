@@ -2,186 +2,99 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Putrixland: El Legado del Chochoverso</title>
     <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-        }
+        * { box-sizing: border-box; user-select: none; -webkit-touch-callout: none; }
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-color: #0b0214;
             font-family: 'Courier New', Courier, monospace;
             color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden;
         }
         #game-container {
-            width: 800px;
-            height: 600px;
+            width: 100vw; height: 100vh;
+            max-width: 768px; max-height: 1024px;
             background: linear-gradient(180deg, #180530 0%, #05010d 100%);
             border: 4px solid #b633ff;
             box-shadow: 0 0 20px #b633ff;
+            display: flex; flex-direction: column;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
         #game-header {
             background-color: #120324;
-            padding: 10px;
+            padding: 8px;
             border-bottom: 2px solid #b633ff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            font-size: 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: bold; font-size: 11px;
         }
-        .status-item {
-            color: #00ffcc;
-            text-shadow: 0 0 5px #00ffcc;
-        }
+        .status-item { color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
         #screen-area {
-            flex: 1;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
+            flex: 1; display: flex; flex-direction: column;
+            padding: 12px; gap: 10px; overflow: hidden;
         }
         #visual-display {
-            height: 220px;
-            background-color: #000;
-            border: 2px solid #ff33aa;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 180px; background-color: #000;
+            border: 2px solid #ff33aa; border-radius: 4px;
+            position: relative; overflow: hidden;
         }
         #bg-canvas-mock {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            position: absolute; width: 100%; height: 100%;
             background: radial-gradient(circle, #5e0b75 0%, #150221 100%);
             opacity: 0.6;
-            z-index: 1;
         }
         .pixel-star {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background-color: #fff;
-            box-shadow: 0 0 4px #fff;
+            position: absolute; width: 3px; height: 3px;
+            background-color: #fff; box-shadow: 0 0 4px #fff;
         }
         #character-sprite-container {
-            position: absolute;
-            bottom: 10px;
-            left: 30px;
-            z-index: 10;
-            display: flex;
-            gap: 40px;
-            align-items: flex-end;
-            width: calc(100% - 60px);
-            justify-content: space-between;
+            position: absolute; bottom: 5px; left: 15px; right: 15px;
+            display: flex; justify-content: space-between; align-items: flex-end;
         }
-        .sprite-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
+        .sprite-wrapper { display: flex; flex-direction: column; align-items: center; }
         .character-sprite {
-            width: 80px;
-            height: 100px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: bottom center;
-            image-rendering: pixelated;
-            filter: drop-shadow(0 0 6px rgba(255,255,255,0.4));
+            width: 90px; height: 110px;
+            background-size: contain; background-repeat: no-repeat; background-position: bottom center;
         }
         .sprite-label {
-            background: rgba(0,0,0,0.7);
-            border: 1px solid #00ffcc;
-            padding: 2px 6px;
-            font-size: 10px;
-            border-radius: 3px;
-            margin-top: 4px;
-            color: #00ffcc;
+            background: rgba(0,0,0,0.8); border: 1px solid #00ffcc;
+            padding: 1px 4px; font-size: 9px; border-radius: 3px;
+            margin-top: 2px; color: #00ffcc;
         }
         #entity-sprite {
-            width: 100px;
-            height: 110px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: bottom center;
-            image-rendering: pixelated;
+            width: 100px; height: 120px;
+            background-size: contain; background-repeat: no-repeat; background-position: bottom center;
         }
         #text-log {
-            flex: 1;
-            background-color: rgba(10, 3, 20, 0.85);
-            border: 2px solid #b633ff;
-            border-radius: 4px;
-            padding: 15px;
-            overflow-y: auto;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
+            flex: 1; background-color: rgba(10, 3, 20, 0.9);
+            border: 2px solid #b633ff; border-radius: 4px;
+            padding: 12px; overflow-y: auto;
+            font-size: 13px; line-height: 1.4;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
         }
-        .log-text {
-            margin-bottom: 10px;
-            animation: fadeIn 0.4s ease forwards;
-        }
+        .log-text { margin-bottom: 8px; animation: fadeIn 0.3s ease forwards; }
         .system-msg { color: #ff33aa; font-weight: bold; }
         .character-speech { color: #00ffcc; }
         .lore-accent { color: #ffff33; }
         #options-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            min-height: 80px;
+            display: flex; flex-direction: column;
+            gap: 8px; padding-bottom: 5px;
         }
         .action-btn {
             background: linear-gradient(180deg, #3d0c5a 0%, #1e0330 100%);
-            border: 2px solid #b633ff;
-            color: #fff;
-            padding: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 13px;
-            text-align: left;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 0 #150224;
-            display: flex;
-            align-items: center;
+            border: 2px solid #b633ff; color: #fff;
+            padding: 12px; border-radius: 4px;
+            cursor: pointer; font-family: 'Courier New', Courier, monospace;
+            font-size: 12px; text-align: left;
+            box-shadow: 0 3px 0 #150224;
+            width: 100%; -webkit-appearance: none;
         }
-        .action-btn:hover {
-            background: linear-gradient(180deg, #53127a 0%, #290442 100%);
-            border-color: #00ffcc;
-            box-shadow: 0 4px 0 #150224, 0 0 8px rgba(0, 255, 204, 0.4);
-            transform: translateY(-1px);
-        }
-        .action-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #150224;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Custom Scrollbar */
-        #text-log::-webkit-scrollbar { width: 8px; }
-        #text-log::-webkit-scrollbar-track { background: #120324; }
-        #text-log::-webkit-scrollbar-thumb { background: #b633ff; border-radius: 4px; }
-        #text-log::-webkit-scrollbar-thumb:hover { background: #00ffcc; }
+        .action-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #150224; border-color: #00ffcc; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #text-log::-webkit-scrollbar { width: 6px; }
+        #text-log::-webkit-scrollbar-thumb { background: #b633ff; border-radius: 3px; }
     </style>
 </head>
 <body>
@@ -190,7 +103,7 @@
     <div id="game-header">
         <div>📍 <span id="location-display">Putrixland Centro</span></div>
         <div class="status-item">✨ CHOCHOFUERZA: <span id="power-display">100%</span></div>
-        <div style="color: #ff33aa;">📅 AÑO: 2027 (Actualidad)</div>
+        <div style="color: #ff33aa;">📅 AÑO: 2027</div>
     </div>
 
     <div id="screen-area">
@@ -209,41 +122,34 @@
         </div>
 
         <div id="text-log"></div>
-
         <div id="options-container"></div>
     </div>
 </div>
 
 <script>
-    // Asset representations natively simulated via high-fidelity CSS/SVG filters & base64 presets
+    // Configuración para usar tus PNGs reales subidos a GitHub
     const sprites = {
-        xuxi: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50" width="100" height="120" style="image-rendering:pixelated;"><rect x="14" y="6" width="12" height="12" fill="%23f2c199"/><rect x="12" y="4" width="16" height="4" fill="%23312217"/><rect x="10" y="8" width="4" height="6" fill="%23312217"/><rect x="26" y="8" width="4" height="6" fill="%23312217"/><rect x="15" y="10" width="2" height="2" fill="%23000"/><rect x="23" y="10" width="2" height="2" fill="%23000"/><rect x="18" y="14" width="4" height="2" fill="%23e25c5c"/><rect x="10" y="18" width="20" height="22" fill="%23ffffff"/><rect x="8" y="18" width="4" height="14" fill="%23f2c199"/><rect x="28" y="18" width="4" height="14" fill="%23f2c199"/><rect x="12" y="40" width="7" height="10" fill="%2322252c"/><rect x="21" y="40" width="7" height="10" fill="%2322252c"/><rect x="10" y="48" width="9" height="3" fill="%23111"/><rect x="21" y="48" width="9" height="3" fill="%23111"/></svg>')`,
-        reveluv: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50" width="100" height="120" style="image-rendering:pixelated;"><rect x="14" y="8" width="12" height="12" fill="%23eac29e"/><rect x="8" y="2" width="24" height="8" fill="%23d297ff"/><rect x="24" y="4" width="6" height="14" fill="%23d297ff"/><rect x="16" y="11" width="2" height="2" fill="%23381e05"/><rect x="22" y="11" width="2" height="2" fill="%23381e05"/><rect x="18" y="15" width="4" height="2" fill="%23ff3b75"/><rect x="10" y="20" width="20" height="20" fill="%23fcf7f9" stroke="%23ff7be4" stroke-width="1"/><path d="M 6 22 L 12 30 L 10 35 Z" fill="%23333"/><circle cx="8" cy="34" r="3" fill="%23eedd44"/><path d="M 32 24 L 38 22 L 36 34 Z" fill="%23ff66cc"/></svg>')`,
-        chocho: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 40" style="image-rendering:pixelated;"><rect x="5" y="12" width="40" height="14" fill="%231a5fb4" rx="4"/><circle cx="15" cy="19" r="4" fill="%23fff"/><circle cx="15" cy="19" r="2" fill="%230a2749"/><circle cx="35" cy="19" r="4" fill="%23fff"/><circle cx="35" cy="19" r="2" fill="%230a2749"/><path d="M 10 26 Q 25 35 40 26" stroke="%235cbfef" stroke-width="2" fill="none"/><path d="M 8 20 L 2 32 M 42 20 L 48 32 M 20 26 L 16 38 M 30 26 L 34 38" stroke="%235cbfef" stroke-width="2"/></svg>')`,
-        xoxo: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" style="image-rendering:pixelated;"><ellipse cx="25" cy="25" rx="22" ry="16" fill="%232ec27e"/><circle cx="18" cy="18" r="5" fill="%23fff"/><circle cx="18" cy="18" r="2" fill="%23000"/><circle cx="32" cy="18" r="5" fill="%23fff"/><circle cx="32" cy="18" r="2" fill="%23000"/><path d="M 10 30 Q 25 5 40 30" fill="%2310603a"/><path d="M 12 32 Q 25 45 38 32" fill="none" stroke="%23000" stroke-width="2"/></svg>')`,
-        mamasita: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50" style="image-rendering:pixelated;"><path d="M 10 10 L 30 10 L 32 38 L 8 38 Z" fill="%23111"/><rect x="13" y="12" width="14" height="14" fill="%23e59a73"/><rect x="10" y="6" width="20" height="8" fill="%23111"/><rect x="16" y="16" width="2" height="2" fill="%23000"/><rect x="22" y="16" width="2" height="2" fill="%23000"/><path d="M 15 22 Q 20 26 25 22" stroke="%23e11919" stroke-width="2" fill="none"/><rect x="11" y="26" width="18" height="20" fill="%23e59a73"/></svg>')`,
-        carlitos: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50" style="image-rendering:pixelated;"><rect x="13" y="15" width="14" height="13" fill="%23fcdab0"/><path d="M 10 15 L 30 15 L 20 2 L 11 12 Z" fill="%23e11919"/><circle cx="20" cy="3" r="3" fill="%23fff"/><rect x="9" y="13" width="22" height="4" fill="%23fff" rx="2"/><rect x="12" y="18" width="16" height="5" fill="%23111"/><rect x="11" y="28" width="18" height="18" fill="%23fff"/><rect x="14" y="46" width="12" height="4" fill="%23222"/></svg>')`,
-        maricona: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50" style="image-rendering:pixelated;"><path d="M 10 5 L 30 5 L 34 22 L 24 22 L 22 34 L 32 45 L 8 45 L 18 34 L 16 22 L 6 22 Z" fill="%23dedede" stroke="%23c4a000" stroke-width="2"/><ellipse cx="20" cy="13" rx="8" ry="6" fill="%23fae4e4"/><path d="M 16 13 Q 20 18 24 13" stroke="%23b50505" stroke-width="2" fill="none"/></svg>')`,
-        kiyix: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50" style="image-rendering:pixelated;"><circle cx="20" cy="15" r="10" fill="%23bf8968"/><rect x="12" y="25" width="16" height="22" fill="%23784421"/><circle cx="20" cy="36" r="9" fill="%232a7fff"/><path d="M 14 34 Q 20 28 26 38" stroke="%234eff33" stroke-width="2" fill="none"/></svg>')`
+        xuxi: "url('xuxi.PNG')",
+        reveluvdiosa: "url('reveluvdiosa.PNG')",
+        chocho: "url('CHOCHO.PNG')",
+        xoxo: "url('XOXO.PNG')",
+        mamasita: "url('Mamasita.PNG')",
+        carlitos: "url('Carlitos.PNG')",
+        srta_maricona: "url('Señorita_mariconxxx.PNG')",
+        kiyix: "url(KIYIXXX.PNG')"
     };
 
-    let gameState = {
-        chosenCharacter: '',
-        chochofuerza: 100,
-        currentScene: 'start'
-    };
+    let gameState = { chosenCharacter: '', chochofuerza: 100, currentScene: 'start' };
 
     const textLog = document.getElementById('text-log');
     const optionsContainer = document.getElementById('options-container');
     const playerSprite = document.getElementById('player-sprite');
     const entitySprite = document.getElementById('entity-sprite');
     const entityLabel = document.getElementById('entity-label');
-    const locationDisplay = document.getElementById('location-display');
     const powerDisplay = document.getElementById('power-display');
 
-    // Visual effect: Stars background generator
     const bgMock = document.getElementById('bg-canvas-mock');
-    for(let i=0; i<30; i++) {
+    for(let i=0; i<20; i++) {
         let star = document.createElement('div');
         star.className = 'pixel-star';
         star.style.left = Math.random() * 100 + '%';
@@ -279,12 +185,12 @@
         start: {
             text: "¡BIENVENIDO A PUTRIXLAND! El año es 2027. Perriciano ha muerto en el calabozo debido a su psicosis y gonorrea fulminante. El Chochoverso requiere un salvador o un destructor definitivo para balancear el continuo cósmico.<br><br><span class='system-msg'>[SELECCIONA TU ENTIDAD REVOLUCIONARIA]</span>",
             options: [
-                { text: "Elegir a XUXI (El Joto rencoroso)", action: () => selectChar('xuxi') },
-                { text: "Elegir a REVELUVDIOSA (La lox de babyjuicha)", action: () => selectChar('reveluv') }
+                { text: "Elegir a XUXI (La Vengadora de la Bongos)", action: () => selectChar('xuxi') },
+                { text: "Elegir a REVELUVDIOSA (Forma Revolucionaria Viva)", action: () => selectChar('reveluv') }
             ]
         },
         xuxi_start: {
-            text: "<span class='character-speech'>Xuxi:</span> He metido los suficientes putazos como para limpiarle el chochito a perriciano, pero la energía del ganzo de Luci Luci y los gusanos alienígenas de mamasita, están infectando el Golfo de Vera. De la nada, un portal espacial se abre frente a ti...",
+            text: "<span class='character-speech'>Xuxi:</span> He metido los suficientes putazos como para limpiar la Bongos, pero la energía residual de la traición de Luci Luci y los gusanos alienígenas está infectando el Golfo de Vera. De la nada, un portal espacial se abre frente a ti...",
             options: [
                 { text: "Entrar directamente tirando un putazo galáctico", action: () => goScene('portal_interior') },
                 { text: "Invocar a CHOCHO mediante un rezo urgido", action: () => goScene('rezo_chocho') }
@@ -301,7 +207,7 @@
             text: "Te adentras en el portal. Frente a ti se manifiesta el mismísimo <span class='lore-accent'>XOXO</span>, liberado de su celda espacio-temporal debido a las paradojas del 2027.",
             entity: 'xoxo', label: 'XOXO',
             options: [
-                { text: "Darle un putazo cósmico purificador", action: () => { updatePower(20); goScene('xoxo_derrotado'); } },
+                { text: "Darle una bofetada cósmica purificadora", action: () => { updatePower(20); goScene('xoxo_derrotado'); } },
                 { text: "Aliarte con él para desatar el caos del Xoxoverso", action: () => { updatePower(-30); goScene('caos_total'); } }
             ]
         },
@@ -331,7 +237,7 @@
         },
         liberacion_alessita: {
             text: "¡EL REINO DE LOS PUTAZIS SE LEVANTA! <span class='lore-accent'>Carlitos</span> despierta furioso en medio de una cena navideña eterna para detener el desastre.",
-            entity: 'carlitos', label: 'Carlitos 1669',
+            entity: 'carlitos', label: 'Carlitos 1945',
             options: [
                 { text: "Pelear al lado de los Querry reformados", action: () => goScene('final_bueno') },
                 { text: "Dejar que Putrixland colapse en un abismo de excesos", action: () => goScene('final_caos') }
@@ -346,11 +252,11 @@
             options: [{ text: "Ver destrucción final", action: () => goScene('final_caos') }]
         },
         final_bueno: {
-            text: "<span class='system-msg'>🏆 ¡FINAL LOGRADO: PROTECTOR DE PUTRIXLAND!</span><br>Lograste controlar las fuerzas cósmicas de Chocho. El testamento se estabiliza, los remanentes de gonorrea son erradicados y la era del cagapalismo entra en una hermosa utopía de paz y teiboldance deluxe.",
+            text: "<span class='system-msg'>🏆 ¡FINAL LOGRADO: PROTECTOR DE PUTRIXLAND!</span><br>Lograste controlar las fuerzas cósmicas de Chocho. El testamento se estabiliza y la era del cagapalismo entra en una hermosa utopía de paz y teiboldance deluxe.",
             options: [{ text: "Volver a jugar", action: () => resetGame() }]
         },
         final_caos: {
-            text: "<span class='system-msg'>💀 ¡FINAL LOGRADO: EL APOCALIPSIS DE LA CHOCHA EN CANDELA!</span><br>Putrixland colapsa por completo. Las masas universales chocan de nuevo, extinguiendo a los ancestros Culojuicha y mandando a todo ser vivo a una dimensión regida por Bodoque 1ro y mil ganchitos encendidos.",
+            text: "<span class='system-msg'>💀 ¡FINAL LOGRADO: EL APOCALIPSIS!</span><br>Putrixland colapsa por completo. Las masas universales chocan de nuevo, mandando a todo ser vivo a una dimensión regida por Bodoque 1ro y mil ganchitos encendidos.",
             options: [{ text: "Reiniciar Universo", action: () => resetGame() }]
         }
     };
@@ -359,23 +265,15 @@
         gameState.chosenCharacter = char;
         playerSprite.style.backgroundImage = sprites[char];
         document.getElementById('player-label').textContent = char.toUpperCase();
-        writeLog(`Has encarnado a ${char.toUpperCase()} con éxito.`, 'system-msg');
         goScene(`${char}_start`);
     }
 
     function goScene(sceneKey) {
         const scene = story[sceneKey];
         if (!scene) return;
-        
         gameState.currentScene = sceneKey;
-        if (scene.entity) {
-            setEntity(scene.entity, scene.label);
-        } else {
-            setEntity(null);
-        }
-
+        setEntity(scene.entity || null, scene.label || '');
         writeLog(scene.text);
-        
         optionsContainer.innerHTML = '';
         scene.options.forEach(opt => {
             const btn = document.createElement('button');
@@ -387,18 +285,13 @@
     }
 
     function resetGame() {
-        gameState.chosenCharacter = '';
-        gameState.chochofuerza = 100;
+        gameState.chosenCharacter = ''; gameState.chochofuerza = 100;
         playerSprite.style.backgroundImage = 'none';
         document.getElementById('player-label').textContent = 'Tú';
-        textLog.innerHTML = '';
-        updatePower(0);
+        textLog.innerHTML = ''; updatePower(0);
         goScene('start');
     }
-
-    // Initialize application execution loop
     goScene('start');
 </script>
-
 </body>
 </html>
