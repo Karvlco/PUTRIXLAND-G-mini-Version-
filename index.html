@@ -185,12 +185,12 @@
         start: {
             text: "¡BIENVENIDO A PUTRIXLAND! El año es 2027. Perriciano ha muerto en el calabozo debido a su psicosis y gonorrea fulminante. El Chochoverso requiere un salvador o un destructor definitivo para balancear el continuo cósmico.<br><br><span class='system-msg'>[SELECCIONA TU ENTIDAD REVOLUCIONARIA]</span>",
             options: [
-                { text: "Elegir a XUXI (La Vengadora de la Bongos)", action: () => selectChar('xuxi') },
-                { text: "Elegir a REVELUVDIOSA (Forma Revolucionaria Viva)", action: () => selectChar('reveluv') }
+                { text: "Elegir a XUXI (El joto, Vengador de la raza de los xuxis)", action: () => selectChar('xuxi') },
+                { text: "Elegir a REVELUVDIOSA (La lox de babyjuicha y scort en secreto)", action: () => selectChar('reveluvdiosa') }
             ]
         },
         xuxi_start: {
-            text: "<span class='character-speech'>Xuxi:</span> He metido los suficientes putazos como para limpiar la Bongos, pero la energía residual de la traición de Luci Luci y los gusanos alienígenas está infectando el Golfo de Vera. De la nada, un portal espacial se abre frente a ti...",
+            text: "<span class='character-speech'>Xuxi:</span> He metido los suficientes deditos a babyjuicha, ahora soy todo en experto en enterrar los deditos😈",
             options: [
                 { text: "Entrar directamente tirando un putazo galáctico", action: () => goScene('portal_interior') },
                 { text: "Invocar a CHOCHO mediante un rezo urgido", action: () => goScene('rezo_chocho') }
@@ -207,7 +207,7 @@
             text: "Te adentras en el portal. Frente a ti se manifiesta el mismísimo <span class='lore-accent'>XOXO</span>, liberado de su celda espacio-temporal debido a las paradojas del 2027.",
             entity: 'xoxo', label: 'XOXO',
             options: [
-                { text: "Darle una bofetada cósmica purificadora", action: () => { updatePower(20); goScene('xoxo_derrotado'); } },
+                { text: "Darle un putazo cósmico purificador", action: () => { updatePower(20); goScene('xoxo_derrotado'); } },
                 { text: "Aliarte con él para desatar el caos del Xoxoverso", action: () => { updatePower(-30); goScene('caos_total'); } }
             ]
         },
